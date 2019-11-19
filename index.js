@@ -9,7 +9,7 @@ var app = express();
 
 const Pool = pg.Pool;
 
-const connectionString = process.env.DATABASE_URL || 'postgresql://codex:kingdelaan@localhost/registration';
+const connectionString = process.env.DATABASE_URL || 'postgresql://codex:kingdelaan@localhost:5432/registration';
 
 const pool = new Pool({
   connectionString
@@ -66,7 +66,7 @@ app.post('/reg_numbers', async function (req, res) {
 //   res.redirect('/');
 // })
 
-const PORT = process.env.PORT || 3005;
+const PORT = process.env.PORT || 3007;
 app.listen(PORT, function () {
   console.log("App started at port:", PORT)
 });
