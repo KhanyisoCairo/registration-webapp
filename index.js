@@ -36,8 +36,7 @@ app.use(bodyParser.json())
  //Routes
 //home 
 app.get('/', async function (req, res) {
-  let registration = await registrationFactory.getRegistration();
-  // let filter = await registrationFactory.filter();
+  let registration = await registrationFactory.getRegistration(); 
   res.render('index', {regNumber:registration});
   // console.log({registration},"line 41")
 });
