@@ -44,13 +44,12 @@ app.get('/', async function (req, res) {
 //home displaying registration number
 app.post('/reg_numbers', async function (req, res) {
       let addingRegistration =  await registrationFactory.registration(req.body.firstname);
-      // let filter = await registrationFactory.filter();
-
+  
       res.render('index', {towns: addingRegistration });
   console.log({towns: addingRegistration},"line 48")
 });
 //this is to post the registration 
-app.get('/reg_numbers', async function (req, res) {
+app.post('/reg_numbers', async function (req, res) {
   await registrationFactory.registration(req.body.firstname)
   // console.log(req.body.firstname,"line 53")
   res.redirect("/");
@@ -58,7 +57,7 @@ app.get('/reg_numbers', async function (req, res) {
 
 app.post('/reg_numbers', async function (req, res) {
   const actionType = req.body.actionType
-  await registrationFactory.addRegistration(actionType)
+  await registrationFactory.registration(actionType)
   res.redirect("/");
 });
 

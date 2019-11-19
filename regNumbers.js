@@ -1,6 +1,7 @@
 module.exports = function RegistrationFactory(pool) {
     var regNumbers1 = [];
     var newReg1;
+
     var regex = /[A-Z]{2}\s[0-9]{3}\s[0-9]{3}/i;
 
     // async function clear() {
@@ -28,52 +29,60 @@ module.exports = function RegistrationFactory(pool) {
 
     async function addRegistration(loc) {
         console.log(loc, 'test');
-
-        var upCase2 = loc;
         let response;
+        var upCase2 = loc;
         var upCase2 = loc.toUpperCase().trim();
         var myTest = regex.test(upCase2);
-        store = await pool.query('select * from regNumbers WHERE registration = $1', [upCase2])
+        var store = await pool.query('select * from regNumbers WHERE registration = $1', [upCase2])
 
         console.log(upCase2)
         if (upCase2.length > 0 && upCase2.length <= 10 && myTest === true) {
 
             if (upCase2.startsWith("CA ") || upCase2.startsWith("CY ") || upCase2.startsWith("CF ")) {
+                console.log("log 1");
+
                 if (regNumbers1.includes(upCase2) === false) {
+                    console.log("log 2");
                     regNumbers1.push(upCase2);
-                
-                if (store.rows.length === 0) {
-                    if (regNumbers1[upCase2] === undefined) {
-                        regNumbers1[upCase2] = 0;
-                        check = await pool.query('select distinct registration, allTowns_id from regNumbers')
-                    }
+                    console.log(regNumbers1,"line 47");
+                    
+                    if (store.rows.length === 0) {
+                        console.log("log 3");
+                        if (regNumbers1[upCase2] === undefined) {
+                            regNumbers1[upCase2] = 0;
+                            check = await pool.query('select distinct registration, allTowns_id from regNumbers')
+                        }
 
-                    if (upCase2.startsWith('CA ')) {
-                        await pool.query('insert into regNumbers (registration, allTowns_id) values ($1, $2)', [upCase2, 3]);
-                        response = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 3;')
+                        if (upCase2.startsWith('CA ')) {
+                            await pool.query('insert into regNumbers (registration, allTowns_id) values ($1, $2)', [upCase2, 3]);
+                            response = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 3;')
 
-                    }
+                        }
 
-                    if (upCase2.startsWith('CY ')) {
-                        await pool.query('insert into regNumbers (registration, allTowns_id) values ($1, $2)', [upCase2, 1]);
-                        response = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 1;')
+                        if (upCase2.startsWith('CY ')) {
+                            await pool.query('insert into regNumbers (registration, allTowns_id) values ($1, $2)', [upCase2, 1]);
+                            response = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 1;')
 
-                    }
+                        }
 
-                    if (upCase2.startsWith('CF ')) {
-                        await pool.query('insert into regNumbers (registration, allTowns_id) values ($1, $2)', [upCase2, 2]);
-                        response = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 2;')
+                        if (upCase2.startsWith('CF ')) {
+                            await pool.query('insert into regNumbers (registration, allTowns_id) values ($1, $2)', [upCase2, 2]);
+                            response = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 2;')
 
+                        }
+                    }else {
+                        response = store
                     }
                 }
             }
-            }
         }
+        console.log(response.rows);
+
         regNumbers1 = response.rows
     }
 
     async function getRegistration() {
-        // console.log(regNumbers1);
+        console.log(regNumbers1,"line 82");
         return regNumbers1
 
     }
