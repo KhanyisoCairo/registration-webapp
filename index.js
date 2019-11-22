@@ -36,35 +36,30 @@ app.use(bodyParser.json())
  //Routes
 //home 
 app.get('/', async function (req, res) {
-  let registration = await registrationFactory.getRegistration(); 
-  res.render('index', {regNumber:registration});
-  // console.log({registration},"line 41")
+  
+  res.render('index', {
+    regis: await registrationFactory.registration()
+  });
 });
 //home displaying registration number
 app.post('/reg_numbers', async function (req, res) {
-      let addingRegistration =  await registrationFactory.registration(req.body.firstname);
-  
-      res.render('index', {towns: addingRegistration });
-  console.log({towns: addingRegistration},"line 48")
+      let addingRegistration =  await registrationFactory.getRegistration();
+      res.render('index', {registration: addingRegistration });
+  console.log({regis: addingRegistration},"line 48")
 });
 //this is to post the registration 
 app.post('/reg_numbers', async function (req, res) {
+  console.log(req.body);
+  
   await registrationFactory.registration(req.body.firstname)
-  // console.log(req.body.firstname,"line 53")
   res.redirect("/");
 });
-
-app.post('/reg_numbers', async function (req, res) {
-  const actionType = req.body.actionType
-  await registrationFactory.registration(actionType)
-  res.redirect("/");
+app.post('/filter', async function (req, res) {
+  await registrationFactory.registration(req.body.firstname)
+// let filter  = await registrationFactory.filter();
+// res.render('index', {regis: filter });
+  // res.redirect("/");
 });
-
-// app.post('/reset', async function (req, res) {
-//   await registrationFactory.resetDataBase();
-
-//   res.redirect('/');
-// })
 
 const PORT = process.env.PORT || 3007;
 app.listen(PORT, function () {

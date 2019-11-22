@@ -1,0 +1,33 @@
+.regNumbers li{
+    border-radius: 5px;
+    width: 100px;
+    background-color:yellow;
+    list-style: none;
+    text-align: center;
+    margin: 0px 0px 10px 10px;
+    float : right;
+    border: solid;
+    
+  }
+  *{
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  text-align: center;
+  }
+  body{
+  font-family: "Poppins", sans-serif;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background: #fff;
+  }
+  .green{
+  color: green;
+  }
+  
+  .red{
+    color: red;
+  }

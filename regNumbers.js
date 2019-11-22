@@ -1,39 +1,25 @@
 module.exports = function RegistrationFactory(pool) {
     var regNumbers1 = [];
+    var store;
     var newReg1;
+    var response;
+    var response2;
+    var response3;
+    var final =[];
 
     var regex = /[A-Z]{2}\s[0-9]{3}\s[0-9]{3}/i;
 
-    // async function clear() {
-
-    //     regNumbers1 = [];
-    // }
-
-    // async function showError() {
-    //     return "Please enter valid registration"
-    // }
-
-    async function checkDuplicates(testNum) {
-        return regNumbers1.includes(testNum.toUpperCase());
-    }
-    // async function initialize() {
-    //     var initial = [];
-    //     initial = ["CA 321541", "CF 321541"];
-    //     return initial;
-    // }
-
-
-    async function validate(plate) {
-        return regex.test(plate);
+    async function checkDuplicates() {
+        return store.rows
     }
 
     async function addRegistration(loc) {
         console.log(loc, 'test');
-        let response;
+   
         var upCase2 = loc;
         var upCase2 = loc.toUpperCase().trim();
         var myTest = regex.test(upCase2);
-        var store = await pool.query('select * from regNumbers WHERE registration = $1', [upCase2])
+        store = await pool.query('select * from regNumbers WHERE registration = $1', [upCase2])
 
         console.log(upCase2)
         if (upCase2.length > 0 && upCase2.length <= 10 && myTest === true) {
@@ -44,7 +30,7 @@ module.exports = function RegistrationFactory(pool) {
                 if (regNumbers1.includes(upCase2) === false) {
                     console.log("log 2");
                     regNumbers1.push(upCase2);
-                    console.log(regNumbers1,"line 47");
+                    // console.log(regNumbers1,"line 47");
                     
                     if (store.rows.length === 0) {
                         console.log("log 3");
@@ -56,19 +42,20 @@ module.exports = function RegistrationFactory(pool) {
                         if (upCase2.startsWith('CA ')) {
                             await pool.query('insert into regNumbers (registration, allTowns_id) values ($1, $2)', [upCase2, 3]);
                             response = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 3;')
-
+                            console.log(response.rows)
+                            final = response.rows
                         }
 
                         if (upCase2.startsWith('CY ')) {
                             await pool.query('insert into regNumbers (registration, allTowns_id) values ($1, $2)', [upCase2, 1]);
-                            response = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 1;')
-
+                            response2 = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 1;')
+                            final = response2.rows
                         }
 
                         if (upCase2.startsWith('CF ')) {
                             await pool.query('insert into regNumbers (registration, allTowns_id) values ($1, $2)', [upCase2, 2]);
-                            response = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 2;')
-
+                            response3 = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 2;')
+                            final = response3.rows
                         }
                     }else {
                         response = store
@@ -76,44 +63,56 @@ module.exports = function RegistrationFactory(pool) {
                 }
             }
         }
-        console.log(response.rows);
+     
 
         regNumbers1 = response.rows
     }
 
+ 
+
     async function getRegistration() {
-        console.log(regNumbers1,"line 82");
-        return regNumbers1
+        store = await pool.query('select * from regNumbers')
+
+        return store.rows
 
     }
 
     async function filter(reg) {
-        var filterTown = [];
-        if (reg === undefined || reg === "") {
-            return regNumbers1;
+    
+        if(reg === ''){
+            check = await pool.query('select distinct registration, allTowns_id from regNumbers')
+            final = check.rows
         }
-        for (var i = 0; i < regNumbers1.length; i++) {
-            if (regNumbers1[i].startsWith(reg)) {
-                filterTown.push(regNumbers1[i]);
-            }
+        if (reg ==='CA ') {
+            await pool.query('insert into regNumbers (registration, allTowns_id) values ($1, $2)', [upCase2, 3]);
+            response = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 3;')
+            final = response.rows
         }
-        return filterTown;
+
+        if (reg === 'CY ') {
+            await pool.query('insert into regNumbers (registration, allTowns_id) values ($1, $2)', [upCase2, 1]);
+            response2 = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 1;')
+            final = response2.rows
+        }
+        if (reg === 'CF ') {
+            await pool.query('insert into regNumbers (registration, allTowns_id) values ($1, $2)', [upCase2, 2]);
+            response3 = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 2;')
+            final = response3.rows
+        }
     }
 
-    async function eachReg() {
-        return newReg1;
-    }
+    async function finalResult(){
+        return final
+}
+
+   
 
     return {
 
         registration: addRegistration,
         getRegistration,
         filter,
-        eachReg,
-        // showError,
         checkExist: checkDuplicates,
-        // validate,
-        // initialize,
-        // clear
+        finalResult
     }
 }

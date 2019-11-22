@@ -1,85 +1,47 @@
-<!DOCTYPE html>
-<html lang="en">
+    <div class="container">
+        <div class="col-12">
+                <h1>Registration numbers:</h1>
 
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="ie=edge">
-    <title>Document</title>
-    <link rel="stylesheet" href="css/normalize.css">
-    <link rel="stylesheet" href="css/skeleton.css">
-    <link rel="stylesheet" href="css/style.css">
-
-    <script src="https://code.jquery.com/jquery-3.1.1.min.js"
-        integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8=" crossorigin="anonymous"></script>
-</head>
-
-<body>
-    <div class="row">
-
-        <div class="col-6 ">
-
-            <div class="registration_number">
-
-                <h2>Registration numbers:</h2>
-
-                <br>
-                <div class="msg1">
-                    <h1>{{massege.error}}</h1>
-
+             
+                <div>
+                    <h4>{{massege.error}}</h4>
                 </div>
                 <form action="/reg_numbers" method="POST">
 
                     <input type="text" value="" placeholder="e.g CA 123 567" class="textName1" name="firstname"
-                        maxlength=10>
-                    <input class="submBtn1" type="submit" value="ADD" id="addBtn"><br><br>
-                    <br>
+                        maxlength=10 style="color: black">
+                    <input class="submBtn1" type="submit" value="ADD" id="addBtn">
                 </form>
                 <form action="/filter" method="POST">
                     <div>
-                        <label class="radio">
-
+                        <label>
                             <input type="radio" class="radioBtn1" name="RegNumber1" value="CY"> Bellville
-                            <span></span>
                         </label>
 
                         <label class="radio">
-
                             <input type="radio" class="radioBtn1" name="RegNumber1" value="CA"> Cape Town
-                            <span></span>
                         </label>
 
                         <label class="radio">
 
                             <input type="radio" class="radioBtn1" name="RegNumber1" value="CF"> Paarl
-                            <span></span>
                         </label>
 
                         <label class="radio">
 
-                            <input type="radio" class="radioBtn1" name="RegNumber1" value=""> Show All
-                            <span></span>
+                            <button type="radio" class="radioBtn1" name="RegNumber1" value=""> Show All</button>
                         </label>
-
-
                     </div>
                 </form>
-                <br><br>
-                <input class="showBtn1" type="submit" value="Show" id="showBtn"><br><br>
-                <input class="ResetBtn1" type="submit" value="Reset" id="resetBtn"><br><br>
-                <div class="row">
-                    <div class="col-6 ">
-                        <ul>
-                            {{registration_number}}
-                        </ul>
+                <div class="col-6 regNumbers">
+                            <ul>
+                                {{#each regis}}
+
+                                <li>{{registration}}</li>
+
+                                {{/each}}
+                            </ul>
                     </div>
-
-                </div>
-            </div>
+                <button class="ResetBtn1" type="submit" value="Reset" id="resetBtn" style="color: black !important">RESET</button> 
         </div>
-
     </div>
-
-</body>
-
-</html>
