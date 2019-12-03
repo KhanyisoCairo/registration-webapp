@@ -33,35 +33,39 @@ app.use(express.static('public'));
 app.use(bodyParser.urlencoded({ extended: false }))
 app.use(bodyParser.json())
 
- //Routes
-//home 
+//home
 app.get('/', async function (req, res) {
-  
-  res.render('index', {
-    regis: await registrationFactory.registration()
-  });
+  let addingRegistration =  await registrationFactory.getRegistration();
+  res.render('index', {regis: addingRegistration });
 });
 //home displaying registration number
-app.post('/reg_numbers', async function (req, res) {
+app.get('/reg_numbers', async function (req, res) {
       let addingRegistration =  await registrationFactory.getRegistration();
-      res.render('index', {registration: addingRegistration });
+      
   console.log({regis: addingRegistration},"line 48")
+      res.render('index', {regis: addingRegistration });
 });
-//this is to post the registration 
+//this is to post the registration
 app.post('/reg_numbers', async function (req, res) {
-  console.log(req.body);
-  
+  console.log(req.body.firstname,"line 51");
+
   await registrationFactory.registration(req.body.firstname)
-  res.redirect("/");
+  res.redirect("/reg_numbers");
 });
 app.post('/filter', async function (req, res) {
-  await registrationFactory.registration(req.body.firstname)
-// let filter  = await registrationFactory.filter();
-// res.render('index', {regis: filter });
-  // res.redirect("/");
+  // await registrationFactory.registration(req.body.RegNumber1)
+let filter  = await registrationFactory.filter(req.body.RegNumber1);
+res.render('index', {regis: filter });
+  //  res.redirect("/");
 });
 
-const PORT = process.env.PORT || 3007;
+// app.post('/', async function (req, res) {
+//   await greetFactory.resetDb();
+
+//   res.redirect('/');
+// })
+
+const PORT = process.env.PORT || 3006;
 app.listen(PORT, function () {
   console.log("App started at port:", PORT)
 });

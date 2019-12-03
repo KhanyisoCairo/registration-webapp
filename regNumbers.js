@@ -1,12 +1,10 @@
 module.exports = function RegistrationFactory(pool) {
     var regNumbers1 = [];
     var store;
-    var newReg1;
     var response;
     var response2;
     var response3;
-    var final =[];
-
+    var final = [];
     var regex = /[A-Z]{2}\s[0-9]{3}\s[0-9]{3}/i;
 
     async function checkDuplicates() {
@@ -15,7 +13,7 @@ module.exports = function RegistrationFactory(pool) {
 
     async function addRegistration(loc) {
         console.log(loc, 'test');
-   
+
         var upCase2 = loc;
         var upCase2 = loc.toUpperCase().trim();
         var myTest = regex.test(upCase2);
@@ -30,8 +28,8 @@ module.exports = function RegistrationFactory(pool) {
                 if (regNumbers1.includes(upCase2) === false) {
                     console.log("log 2");
                     regNumbers1.push(upCase2);
-                    // console.log(regNumbers1,"line 47");
-                    
+                    console.log(regNumbers1, "line 47");
+
                     if (store.rows.length === 0) {
                         console.log("log 3");
                         if (regNumbers1[upCase2] === undefined) {
@@ -57,33 +55,26 @@ module.exports = function RegistrationFactory(pool) {
                             response3 = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 2;')
                             final = response3.rows
                         }
-                    }else {
+                    } else {
                         response = store
                     }
                 }
             }
         }
-     
-
         regNumbers1 = response.rows
     }
-
- 
-
     async function getRegistration() {
         store = await pool.query('select * from regNumbers')
-
         return store.rows
-
     }
 
     async function filter(reg) {
-    
-        if(reg === ''){
+
+        if (reg === '') {
             check = await pool.query('select distinct registration, allTowns_id from regNumbers')
             final = check.rows
         }
-        if (reg ==='CA ') {
+        if (reg === 'CA ') {
             await pool.query('insert into regNumbers (registration, allTowns_id) values ($1, $2)', [upCase2, 3]);
             response = await pool.query('SELECT allTowns.towns, regNumbers.registration FROM allTowns INNER JOIN regNumbers ON allTowns.id = regNumbers.allTowns_id WHERE allTowns.id = 3;')
             final = response.rows
@@ -101,18 +92,23 @@ module.exports = function RegistrationFactory(pool) {
         }
     }
 
-    async function finalResult(){
+    async function finalResult() {
         return final
-}
+    }
+    async function resetDb() {
+        regNumbers1 = [];
+        final = [];
+        let reset = await pool.query('TRUNCATE table regNumbers restart identity')
+        return reset.rows
 
-   
-
+    }
     return {
 
         registration: addRegistration,
         getRegistration,
         filter,
         checkExist: checkDuplicates,
-        finalResult
+        finalResult,
+        resetDb
     }
 }
