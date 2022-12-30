@@ -21,7 +21,7 @@
     "express-static": "^1.2.6",
     "flash": "^1.1.0",
     "handlebars": "^4.5.1",
-    "mocha": "^6.2.2",
+    "mocha": "^10.2.0",
     "pg": "^7.12.1",
     "session": "^0.1.0"
   },
